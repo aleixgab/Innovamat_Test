@@ -10,15 +10,22 @@ public class Controller : MonoBehaviour
 
     [Header("Transitions Timers")]
     public float secInScreen = 4.0f; //2 animation secs + 2 seconds more
-    public float secFadeOut = 2.0f;
+    public float secTextFadeOut = 2.0f;
+    public float secNumsFadeOut = 1.0f;
     public float secAnswer = 1.0f;  //Seconds for wait before FadeOut
+
+    [Header("Counters Texts")]
+    public Text rightText;
+    public Text wrongText;
+    int rightCount = 0;
+    int wrongCount = 0;
 
     [Space]
     //Needs to change the delta Size for have enought space for all text 
-    public int sizeDeltaX;
+    public int sizeDeltaX = 0;
 
-    int correctNumber;
-    int correctIndex;
+    int correctNumber = -1;
+    int correctIndex = -1;
     int lastIndex = -1;
     bool waitingAnswer = false;
 
@@ -26,10 +33,6 @@ public class Controller : MonoBehaviour
 
     //Save the start Delta to avoid to pick out of the number and detect it
     Vector2 startSize;
-    private void Awake()
-    {
-
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -38,57 +41,59 @@ public class Controller : MonoBehaviour
         StartCoroutine(GenerateQuestion());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void TextClicked(int index)
     {
         //Texts Can not be clicked unless the animations will finish;
         if (!waitingAnswer || index == lastIndex)
             return;
 
+        //Right Answer
         if (index == correctIndex)
         {
-            Debug.Log("Correct");
+            //Green number
             numbers[index].GetComponent<Text>().color = Color.green;
-            EndQuestion(true);
-        }
-        else if (canTry)
-        {
-            numbers[index].GetComponent<Text>().color = Color.red;
-            StartCoroutine(FadeOutAnim(numbers[index], secAnswer));
-            lastIndex = index;
-            canTry = false;
+            //Avoid Pick more numbers
+            waitingAnswer = false;
+
+            //Set true to start new question
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                //FadeOut the others numbers if they still in the screen
+                if (i != index && i != lastIndex)
+                    StartCoroutine(FadeOutAnim(numbers[i], secNumsFadeOut, secAnswer));
+            }
+            StartCoroutine(FadeOutAnim(numbers[index], secNumsFadeOut, secAnswer, true));
+
+            rightCount++;
+            rightText.text = "Encerts: " + rightCount.ToString();
         }
         else
         {
-            waitingAnswer = false;
-            EndQuestion(false);
-        }
-    }
-
-    private void EndQuestion(bool isCorrect)
-    {
-        for (int i = 0; i < numbers.Length; i++)
-        {
-            if (numbers[i].activeSelf)
+            //Red Wrong Answer
+            numbers[index].GetComponent<Text>().color = Color.red;
+            if (canTry)
             {
-                if (i == correctIndex)
-                    numbers[i].GetComponent<Text>().color = Color.green;
-                else if(!isCorrect)
-                    numbers[i].GetComponent<Text>().color = Color.red;
-                StartCoroutine(FadeOutAnim(numbers[i], secAnswer));
+                StartCoroutine(FadeOutAnim(numbers[index], secNumsFadeOut, secAnswer));
+                lastIndex = index;
             }
+            else
+            {
+                waitingAnswer = false;
+                //Green correct number
+                numbers[correctIndex].GetComponent<Text>().color = Color.green;
+                StartCoroutine(FadeOutAnim(numbers[index], secNumsFadeOut,secAnswer));
+                StartCoroutine(FadeOutAnim(numbers[correctIndex], secNumsFadeOut, secAnswer, true));
+            }
+
+            canTry = false;
+            wrongCount++;
+            wrongText.text = "Errades: " + wrongCount.ToString();
         }
+
     }
 
     IEnumerator GenerateQuestion()
     {
-        //Set it to true to avoid pick the same number twice
-        waitingAnswer = false;
         //Generate number & print it
         correctNumber = Random.Range(0, allNumbers.Length);
         numbers[0].GetComponent<Text>().text = allNumbers[correctNumber];
@@ -100,7 +105,7 @@ public class Controller : MonoBehaviour
         yield return new WaitForSeconds(secInScreen);
 
         //Start Fade out Routine
-        yield return FadeOutAnim(numbers[0]);
+        yield return FadeOutAnim(numbers[0], secTextFadeOut);
 
         //Set the correct number in one text
         correctIndex = Random.Range(0, numbers.Length);
@@ -135,7 +140,12 @@ public class Controller : MonoBehaviour
     }
 
     //Create a fade out animation routine for all GO
-    IEnumerator FadeOutAnim(GameObject number, float waitBefore = 0.0f)
+    /*
+    Velocity animation -> secFadeOut
+    Delay if we want to wait for something before starts the animation -> waitBefore
+    Create a new question after the anim ends (if "isLastAnim" is true)
+    */
+    IEnumerator FadeOutAnim(GameObject number, float secFadeOut, float waitBefore = 0.0f, bool isLastAnim = false)
     {
         yield return new WaitForSeconds(waitBefore);
         //Get parent for future resize
@@ -151,6 +161,18 @@ public class Controller : MonoBehaviour
         }
         //desactive object & set the parent with correct size
         panel.localScale = Vector3.one;
+        number.GetComponent<Text>().color = Color.black;
         number.SetActive(false);
+
+        if (isLastAnim)
+            ResetQuestion();
+    }
+    //Set the Start Values before Generate again a question
+    private void ResetQuestion()
+    {
+        numbers[0].SetActive(true);
+        canTry = true;
+        lastIndex = -1;
+        StartCoroutine(GenerateQuestion());
     }
 }
