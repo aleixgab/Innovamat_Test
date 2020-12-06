@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+enum State
+{
+    None,
+    Question,
+    Transition,
+    Answer
+}
 public class Controller : MonoBehaviour
 {
     public string[] allNumbers;
@@ -27,7 +34,8 @@ public class Controller : MonoBehaviour
     int correctNumber = -1;
     int correctIndex = -1;
     int lastIndex = -1;
-    bool waitingAnswer = false;
+
+    State state = State.Question;
 
     bool canTry = true;
 
@@ -41,10 +49,17 @@ public class Controller : MonoBehaviour
         StartCoroutine(GenerateQuestion());
     }
 
+    private void Update()
+    {
+        //Here it can check for iterations or switch the game
+        if (state == State.Question)
+            ResetQuestion();
+    }
+
     public void TextClicked(int index)
     {
         //Texts Can not be clicked unless the animations will finish;
-        if (!waitingAnswer || index == lastIndex)
+        if (state != State.Answer || index == lastIndex)
             return;
 
         //Right Answer
@@ -53,7 +68,7 @@ public class Controller : MonoBehaviour
             //Green number
             numbers[index].GetComponent<Text>().color = Color.green;
             //Avoid Pick more numbers
-            waitingAnswer = false;
+            state = State.None;
 
             //Set true to start new question
             for (int i = 0; i < numbers.Length; i++)
@@ -78,7 +93,7 @@ public class Controller : MonoBehaviour
             }
             else
             {
-                waitingAnswer = false;
+                state = State.None;
                 //Green correct number
                 numbers[correctIndex].GetComponent<Text>().color = Color.green;
                 StartCoroutine(FadeOutAnim(numbers[index], secNumsFadeOut,secAnswer));
@@ -94,6 +109,7 @@ public class Controller : MonoBehaviour
 
     IEnumerator GenerateQuestion()
     {
+        state = State.Transition;
         //Generate number & print it
         correctNumber = Random.Range(0, allNumbers.Length);
         numbers[0].GetComponent<Text>().text = allNumbers[correctNumber];
@@ -136,7 +152,7 @@ public class Controller : MonoBehaviour
 
         yield return new WaitForSeconds(2.0f);
         //After the animation ends the user can chose the correct answer
-        waitingAnswer = true;
+        state = State.Answer;
     }
 
     //Create a fade out animation routine for all GO
@@ -151,11 +167,13 @@ public class Controller : MonoBehaviour
         //Get parent for future resize
         Transform panel = number.transform.parent;
         float t = 0;
+
+        Vector3 initialScale = panel.localScale;
         //Animation with code (2sec) fading out with the panel size
         while (t < secFadeOut)
         {
-            float scale = Mathf.Lerp(1, 0, t / secFadeOut);
-            panel.localScale = new Vector3(scale, scale, scale);
+            //Vector3.zero can be another parameter if we want a diferent endSize
+            panel.localScale = Vector3.Lerp(initialScale, Vector3.zero, t/secFadeOut);
             t += Time.deltaTime;
             yield return null;
         }
@@ -163,9 +181,8 @@ public class Controller : MonoBehaviour
         panel.localScale = Vector3.one;
         number.GetComponent<Text>().color = Color.black;
         number.SetActive(false);
-
         if (isLastAnim)
-            ResetQuestion();
+            state = State.Question;
     }
     //Set the Start Values before Generate again a question
     private void ResetQuestion()
