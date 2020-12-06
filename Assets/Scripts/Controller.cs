@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,13 @@ enum State
     Transition, //Question Animation
     Answer //Waiting for an user answer
 }
+
+[System.Serializable]
+public struct AllNumbers
+{
+    public string[] allNumbers;
+}
+
 public class Controller : MonoBehaviour
 {
     public string[] allNumbers;
@@ -45,6 +53,26 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        string path = Application.dataPath + "/Resources/";
+
+        switch (Application.systemLanguage)
+        {
+            case SystemLanguage.Catalan:
+                path += "Catalan.json";
+                break;
+            case SystemLanguage.Spanish:
+                path += "Spanish.json";
+                break;
+            default://English and others
+                path += "English.json";
+                break;
+        }
+
+        Debug.Log(path);
+        AllNumbers numbersClass = JsonUtility.FromJson<AllNumbers>(path);
+        Debug.Log(numbersClass);
+        allNumbers = numbersClass.allNumbers;
+
         startSize = numbers[0].GetComponent<RectTransform>().sizeDelta;
         StartCoroutine(GenerateQuestion());
     }
