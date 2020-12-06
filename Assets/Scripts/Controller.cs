@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 enum State
 {
-    None,
-    Question,
-    Transition,
-    Answer
+    None, // Waiting before start a new question
+    Question, //Create a new question
+    Transition, //Question Animation
+    Answer //Waiting for an user answer
 }
 public class Controller : MonoBehaviour
 {
