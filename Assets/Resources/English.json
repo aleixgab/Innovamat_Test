@@ -1,1 +1,25 @@
-{"allNumbers":["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirdteen","Fourteen","Fifeeteen","Sixteen","Seventeen","Eighteen","Nineteen","Twenty"]}
+{
+  "allNumbers": [
+    "Zero",
+    "One",
+    "Two",
+    "Three",
+    "Four",
+    "Five",
+    "Six",
+    "Seven",
+    "Eight",
+    "Nine",
+    "Ten",
+    "Eleven",
+    "Twelve",
+    "Thirdteen",
+    "Fourteen",
+    "Fifeeteen",
+    "Sixteen",
+    "Seventeen",
+    "Eighteen",
+    "Nineteen",
+    "Twenty" 
+  ] 
+}

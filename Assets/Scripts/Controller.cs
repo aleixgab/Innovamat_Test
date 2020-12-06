@@ -20,7 +20,7 @@ public struct AllNumbers
 
 public class Controller : MonoBehaviour
 {
-    public string[] allNumbers;
+    string[] allNumbers;
     public GameObject[] numbers;
 
     [Header("Transitions Timers")]
@@ -68,9 +68,7 @@ public class Controller : MonoBehaviour
                 break;
         }
 
-        Debug.Log(path);
-        AllNumbers numbersClass = JsonUtility.FromJson<AllNumbers>(path);
-        Debug.Log(numbersClass);
+        AllNumbers numbersClass = JsonUtility.FromJson<AllNumbers>(File.ReadAllText(path));
         allNumbers = numbersClass.allNumbers;
 
         startSize = numbers[0].GetComponent<RectTransform>().sizeDelta;

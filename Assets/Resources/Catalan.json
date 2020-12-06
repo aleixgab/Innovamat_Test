@@ -1,1 +1,25 @@
-{"allNumbers":["Cero","Un","Dos","Tres","Quatre","Cinc","Sis","Set","Vuit","Nou","Deu","Onze","Dotze","Tretze","Catorze","Quinze","Setze","Disset","Divuit","Dinou","Vint"]}
+{
+  "allNumbers": [
+    "Cero",
+    "Un",
+    "Dos",
+    "Tres",
+    "Quatre",
+    "Cinc",
+    "Sis",
+    "Set",
+    "Vuit",
+    "Nou",
+    "Deu",
+    "Onze",
+    "Dotze",
+    "Tretze",
+    "Catorze",
+    "Quinze",
+    "Setze",
+    "Disset",
+    "Divuit",
+    "Dinou",
+    "Vint"
+  ] 
+}
