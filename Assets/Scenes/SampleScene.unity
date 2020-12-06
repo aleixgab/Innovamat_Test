@@ -527,7 +527,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.14509805, g: 0.7568628, b: 0.654902, a: 1}
+  m_BackGroundColor: {r: 0, g: 0.6320754, b: 0.52672946, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -704,10 +704,10 @@ RectTransform:
   m_Father: {fileID: 1645325323}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 245.53998, y: 183.97998}
-  m_SizeDelta: {x: 289.92, y: 71.04}
+  m_AnchorMin: {x: 0.64933103, y: 0.81483024}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 5.539978, y: 9.47998}
+  m_SizeDelta: {x: -11.079987, y: -17.959991}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1078834383
 MonoBehaviour:
@@ -1232,28 +1232,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc5ea63fa07fac5498319ed82a433040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allNumbers:
-  - Zero
-  - One
-  - Two
-  - Three
-  - Four
-  - Five
-  - Six
-  - Seven
-  - Eight
-  - Nine
-  - Ten
-  - Eleven
-  - Twelve
-  - Thirdteen
-  - Fourteen
-  - Fifeeteen
-  - Sixteen
-  - Seventeen
-  - Eighteen
-  - Nineteen
-  - Twenty
   numbers:
   - {fileID: 163708284}
   - {fileID: 1909274076}
